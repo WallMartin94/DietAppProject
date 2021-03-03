@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">DietAppProject</string>
+    <string name="app_name">Diet App Project</string>
+    <string name="bottom_nav_home_label">Home</string>
+    <string name="bottom_nav_meal_label">Today\'s Meals</string>
+    <string name="bottom_nav_fooditem_label">Food Items</string>
+    <string name="bottom_nav_stats_label">Statistics</string>
 </resources>

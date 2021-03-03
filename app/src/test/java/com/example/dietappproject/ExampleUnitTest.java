@@ -1,4 +1,4 @@
-package com.example.mainactivity.dietappproject;
+package com.example.dietappproject;
 
 import org.junit.Test;
 
