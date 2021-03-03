@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import com.example.dietappproject.fooditemtab.FoodItemFragment;
 import com.example.dietappproject.hometab.HomeFragment;
 import com.example.dietappproject.mealtab.MealFragment;
+import com.example.dietappproject.statstab.StatsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new FoodItemFragment();
                             break;
                         case R.id.nav_stats:
-                            selectedFragment = new FoodItemFragment(); //PLACEHOLDER
+                            selectedFragment = new StatsFragment();
                             break;
                     }
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
