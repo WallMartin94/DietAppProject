@@ -1,5 +1,6 @@
 package com.example.dietappproject.mealtab;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,86 +9,82 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.dietappproject.R;
-import com.example.dietappproject.dbobject.Meal;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MealFragment extends Fragment {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference mealRef = db.collection("Meals");
-
-    private MealAdapter adapter;
     View view;
+    Resources res;
+
+    //Navigation - Top tabs
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
+    MealNavAdapter mealNavAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_meal, container, false);
-        setUpRecyclerView();
         return view;
     }
 
-    private void setUpRecyclerView() {
-        //Query for today's meals
-        Date todayEarly = new Date();
-        todayEarly.setHours(0);
-        todayEarly.setMinutes(0);
-        todayEarly.setSeconds(0);
-
-        Query query = mealRef
-                .whereLessThan("date", new Date())
-                .whereGreaterThan("date", todayEarly)
-                .orderBy("date", Query.Direction.DESCENDING);
-
-        FirestoreRecyclerOptions<Meal> options = new FirestoreRecyclerOptions.Builder<Meal>()
-                .setQuery(query, Meal.class)
-                .build();
-
-        adapter = new MealAdapter(options);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_meal);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(adapter);
-
-        //Click on Meal to open Meal Details
-        adapter.setOnItemClickListener(new MealAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Meal meal = documentSnapshot.toObject(Meal.class);
-                String id = documentSnapshot.getId();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("mealId", id);
-
-                MealDetailsFragment fragment = new MealDetailsFragment();
-                fragment.setArguments(bundle);
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-    }
-
     @Override
-    public void onStart() {
-        super.onStart();
-        adapter.startListening();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        res = view.getResources();
+        //Navigation - Top tabs
+        mealNavAdapter = new MealNavAdapter(this);
+        viewPager = view.findViewById(R.id.viewpager);
+        viewPager.setAdapter(mealNavAdapter);
+
+        tabLayout = view.findViewById(R.id.tablayout);
+        ArrayList<String> tabList = new ArrayList<>();
+        tabList.add(res.getString(R.string.meal_nav_today_label));
+        tabList.add(res.getString(R.string.meal_nav_history_label));
+
+        MealTodayFragment todayFragment = new MealTodayFragment();
+        MealHistoryFragment historyFragment = new MealHistoryFragment();
+        mealNavAdapter.addFragment(todayFragment, tabList.get(0));
+        mealNavAdapter.addFragment(historyFragment, tabList.get(1));
+
+
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> tab.setText(tabList.get(position))
+        ).attach();
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_today);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_history);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        adapter.stopListening();
+    private class MealNavAdapter extends FragmentStateAdapter {
+        ArrayList<String> tabList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
+
+        public void addFragment(Fragment fragment, String title) {
+            tabList.add(title);
+            fragmentList.add(fragment);
+        }
+
+        public MealNavAdapter(@NonNull Fragment fragment) {
+            super(fragment);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragmentList.size();
+        }
     }
+
 }
