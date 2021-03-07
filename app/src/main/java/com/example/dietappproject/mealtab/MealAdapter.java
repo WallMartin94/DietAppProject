@@ -54,13 +54,10 @@ public class MealAdapter extends FirestoreRecyclerAdapter<Meal, MealAdapter.Meal
             textViewMealInfo = itemView.findViewById(R.id.textview_meal_info);
             imageViewMealIcon = itemView.findViewById(R.id.imageview_meal_icon);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
-                    }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onItemClick(getSnapshots().getSnapshot(position), position);
                 }
             });
         }
