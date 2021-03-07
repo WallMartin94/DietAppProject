@@ -8,4 +8,13 @@
 
     <string name="meal_nav_today_label">Today</string>
     <string name="meal_nav_history_label">History</string>
+
+    <!-- List of Meal Categories for Add Meal -->
+    <string-array name="meal_category">
+        <item>Breakfast</item>
+        <item>Snack</item>
+        <item>Dinner</item>
+        <item>Lunch</item>
+        <item>Fika</item>
+    </string-array>
 </resources>

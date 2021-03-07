@@ -130,17 +130,5 @@ public class MealDetailsFragment extends Fragment {
                         }
                     }
                 });
-
-        //PLACEHOLDER extra items for testing
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
-        foodItemList.add(new MealItemDetails("aaa", 1, 2, 3, 4));
     }
 }

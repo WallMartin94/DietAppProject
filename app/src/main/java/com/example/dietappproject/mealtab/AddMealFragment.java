@@ -1,0 +1,252 @@
+package com.example.dietappproject.mealtab;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.dietappproject.R;
+import com.example.dietappproject.dbobject.FoodItem;
+import com.example.dietappproject.dbobject.Meal;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+public class AddMealFragment extends Fragment {
+    View view;
+
+    //Firebase Connection
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference refFoodItems = db.collection("FoodItems");
+    private CollectionReference refMeals = db.collection("Meals");
+
+    //Firebase New Meal variables
+    TextView textViewMealTime;
+    TextView textViewMealDate;
+    private String mealUser = "3JGnerHpZR8eheF7P58Z";    // TODO Static guest user for now
+    private String mealCategory;
+    private Date mealDate;
+    private double mealFat = 0, mealCarbs = 0, mealProtein = 0, mealCalories = 0;
+    private Map<String, Double> mealItems = new HashMap<>();
+
+    //RecyclerView for added Items
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    ArrayList<AddMealItem> addMealItemList = new ArrayList<>();
+
+    //Fooditem Search
+    ImageButton imageButtonSearch;
+    ImageButton imageButtonAdd;
+    ImageButton imageButtonSave;
+    EditText editTextBarCodeId;
+    EditText editTextAmount;
+    TextView textViewResult;
+    ArrayList<FoodItem> searchResult = new ArrayList<>();
+    double itemAmount;
+
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_add_meal, container, false);
+
+        imageButtonSearch = view.findViewById(R.id.button_add_meal_search);
+        imageButtonAdd = view.findViewById(R.id.button_add_listitem);
+        imageButtonSave = view.findViewById(R.id.imagebutton_add_meal_save);
+        editTextBarCodeId = view.findViewById(R.id.edittext_add_meal_search);
+        editTextAmount = view.findViewById(R.id.edittext_add_meal_amount);
+        textViewResult = view.findViewById(R.id.textview_add_meal_result);
+        textViewMealTime = view.findViewById(R.id.textview_add_meal_show_time);
+        textViewMealDate = view.findViewById(R.id.textview_add_meal_show_date);
+
+        setDate(); //TODO should be editable
+        createSpinner(view);
+        setupRecyclerView();
+
+        textViewMealTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: TimePicker
+            }
+        });
+
+        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String barcodeId = editTextBarCodeId.getText().toString();
+                searchFoodItem(barcodeId);
+            }
+        });
+
+        imageButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFoodItem();
+            }
+        });
+
+        imageButtonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveMeal();
+            }
+        });
+
+        return view;
+    }
+
+
+    private void createSpinner(View view) {
+        //Spinner Meal Category
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinner_add_meal_category);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.meal_category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mealCategory = String.valueOf(parent.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void setupRecyclerView() {
+        //Set up recyclerView for added foodItems
+        mRecyclerView = view.findViewById(R.id.recycler_view_add_meal);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(view.getContext());
+        mAdapter = new AddMealAdapter(addMealItemList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void setDate() {
+        mealDate = new Date();
+    }
+
+    private void searchFoodItem(String barcodeId) {
+        //Firebase - Search for foodItem with exact barcode
+        refFoodItems.whereEqualTo("barcodeId", barcodeId)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            FoodItem foodItem = documentSnapshot.toObject(FoodItem.class);
+                            foodItem.setDocumentId(documentSnapshot.getId());
+
+                            String documentId = foodItem.getDocumentId();
+                            textViewResult.setText(foodItem.getName());
+                            //Clear searchResult Arraylist before adding result
+                            if (!searchResult.isEmpty()) {
+                                searchResult.clear();
+                            }
+                            searchResult.add(foodItem);
+                        }
+                    }
+                });
+    }
+
+    private void addFoodItem() {
+        //Empty search field
+        if (searchResult.isEmpty()) {
+            Toast.makeText(getActivity(), "Please search for an item to add", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //Empty amount field
+        if (editTextAmount.getText().toString().matches("")) {
+            Toast.makeText(getActivity(), "Please enter an amount to add", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //Amount field needs to be > 0
+        if (Double.parseDouble(editTextAmount.getText().toString()) <= 0) {
+            Toast.makeText(getActivity(), "Please enter an amount bigger than 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String searchDocumentId = searchResult.get(0).getDocumentId();
+        //Item already added to list
+        for (AddMealItem item : addMealItemList) {
+            if (item.getDocumentId().equals(searchDocumentId)) {
+                Toast.makeText(getActivity(), "Item already added to list", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        itemAmount = Double.parseDouble(editTextAmount.getText().toString());
+
+        //Add selected fooditem to recyclerview list
+        addMealItemList.add(new AddMealItem(searchDocumentId,
+                searchResult.get(0).getName(),
+                searchResult.get(0).getBarcodeId(),
+                searchResult.get(0).getFat(),
+                searchResult.get(0).getCarbs(),
+                searchResult.get(0).getProtein(),
+                searchResult.get(0).getCalories(),
+                itemAmount));
+        mAdapter.notifyDataSetChanged();
+
+        //Clear previous search result
+        textViewResult.setText("");
+        editTextAmount.setText("");
+        editTextBarCodeId.setText("");
+        searchResult.clear();
+    }
+
+    private void saveMeal() {
+        if(mealCategory == null) {
+            Toast.makeText(getActivity(), "Please select a Category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //Add foodItem totals to Meal variables
+        for (AddMealItem item : addMealItemList) {
+            double amount = item.getAmount() / 100;     // Divide by 100 to get correct amount
+            mealFat += item.getFat() * amount;
+            mealCarbs += item.getCarbs() * amount;
+            mealProtein += item.getProtein() * amount;
+            mealCalories += item.getCalories() * amount;
+            mealItems.put(item.getDocumentId(), amount);
+        }
+
+        //Create Meal object and add to Firestore
+        Meal newMeal = new Meal(mealCategory, mealUser, mealDate,
+                mealFat, mealCarbs, mealProtein, mealCalories,
+                mealItems);
+
+        //Add meal to Firebase and close fragment
+        refMeals.add(newMeal);
+        Toast.makeText(getActivity(), "Meal added", Toast.LENGTH_SHORT).show();
+        getFragmentManager().popBackStackImmediate();
+    }
+}

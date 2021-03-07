@@ -25,9 +25,9 @@ public class MealAdapter extends FirestoreRecyclerAdapter<Meal, MealAdapter.Meal
     @Override
     protected void onBindViewHolder(@NonNull MealHolder holder, int position, @NonNull Meal model) {
         holder.textViewMealType.setText(model.getCategory());
-        holder.textViewMealInfo.setText("- Fat: " + String.format("%.0f", model.getCalories()) +
-                "\n- Carbs: " + String.format("%.0f", model.getCalories()) +
-                "\n- Protein: " + String.format("%.0f", model.getCalories()) +
+        holder.textViewMealInfo.setText("- Fat: " + String.format("%.0f", model.getFat()) +
+                "\n- Carbs: " + String.format("%.0f", model.getCarbs()) +
+                "\n- Protein: " + String.format("%.0f", model.getProtein()) +
                 "\n- Calories: " + String.format("%.0f", model.getCalories()));
         holder.imageViewMealIcon.setImageResource(mealTypeImageSelector(model.getCategory()));
     }

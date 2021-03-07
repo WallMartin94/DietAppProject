@@ -3,7 +3,8 @@ package com.example.dietappproject.dbobject;
 import com.google.firebase.firestore.Exclude;
 
 public class FoodItem {
-    private String documentId;  //documentId = barcodeId
+    private String documentId;
+    private String barcodeId;
     private String name;
     private String type;
     private double protein;
@@ -15,10 +16,10 @@ public class FoodItem {
         //Public empty constructor for Firestore
     }
 
-    public FoodItem(String documentId, String name, String type,
-                     double protein, double fat, double carbs,
-                     double calories) {
-        this.documentId = documentId;
+    public FoodItem(String barcodeId, String name, String type,
+                    double protein, double fat, double carbs,
+                    double calories) {
+        this.barcodeId = barcodeId;
         this.name = name;
         this.type = type;
         this.protein = protein;
@@ -54,6 +55,10 @@ public class FoodItem {
 
     public double getCalories() {
         return calories;
+    }
+
+    public String getBarcodeId() {
+        return barcodeId;
     }
 
     public void setDocumentId(String documentId) {

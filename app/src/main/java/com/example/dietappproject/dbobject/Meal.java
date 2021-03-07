@@ -10,19 +10,22 @@ public class Meal {
     private String category;
     private Date date;
     private String mealUser;
-    private double calories;
+    private double fat, carbs, protein, calories;
     Map<String, Double> mealItems;
 
     public Meal() {
         //Public empty constructor for Firestore
     }
 
-    public Meal(String documentId, String category, String mealUser,
-                Date date, double calories, Map<String, Double> mealItems) {
-        this.documentId = documentId;
+    public Meal(String category, String mealUser, Date date,
+                double fat, double carbs, double protein, double calories,
+                Map<String, Double> mealItems) {
         this.category = category;
         this.mealUser = mealUser;
         this.date = date;
+        this.fat = fat;
+        this.carbs = carbs;
+        this.protein = protein;
         this.calories = calories;
         this.mealItems = mealItems;
 
@@ -55,5 +58,17 @@ public class Meal {
 
     public double getCalories() {
         return calories;
+    }
+
+    public double getFat() {
+        return fat;
+    }
+
+    public double getCarbs() {
+        return carbs;
+    }
+
+    public double getProtein() {
+        return protein;
     }
 }
