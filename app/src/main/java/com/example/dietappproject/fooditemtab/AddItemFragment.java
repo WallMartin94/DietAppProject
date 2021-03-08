@@ -31,14 +31,15 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import com.example.dietappproject.R;
 
-public class AddItemFragment extends Fragment {
+public class AddItemFragment extends AppCompatActivity{
 
-    static final int  REQUEST_IMAGE_CAPTURE = 1;
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_additem, container, false);
-        Button scanButton = v.findViewById(R.id.scanButton);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_additem);
 
+        Button scanButton = findViewById(R.id.scanButton);
 
         scanButton.setOnClickListener(view -> {
             launchCamera();
@@ -46,14 +47,14 @@ public class AddItemFragment extends Fragment {
 
         });
 
-        return v;
+
     }
 
     public void launchCamera(){
 
-        Intent startScanIntent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent startScanIntent = new Intent (this,BarcodeScannerActivity.class);
         try{
-            startActivityForResult(startScanIntent,REQUEST_IMAGE_CAPTURE);
+            startActivity(startScanIntent);
         }catch (ActivityNotFoundException e){
 
         }
