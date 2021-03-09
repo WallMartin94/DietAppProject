@@ -25,17 +25,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".fooditemtab.BarcodeScannerActivity"
-            android:windowSoftInputMode="adjustPan">
 
-        </activity>
-
-        <activity
-            android:name=".fooditemtab.AddItemFragment"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
 
 
     </application>

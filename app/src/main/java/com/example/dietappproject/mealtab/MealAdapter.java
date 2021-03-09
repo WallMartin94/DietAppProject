@@ -48,6 +48,7 @@ public class MealAdapter extends FirestoreRecyclerAdapter<Meal, MealAdapter.Meal
         TextView textViewMealType;
         TextView textViewMealInfo;
 
+
         public MealHolder(View itemView) {
             super(itemView);
             textViewMealType = itemView.findViewById(R.id.textview_meal_type);
