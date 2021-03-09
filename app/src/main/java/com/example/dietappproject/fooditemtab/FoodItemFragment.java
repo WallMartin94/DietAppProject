@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.dietappproject.R;
+import com.example.dietappproject.mealtab.AddMealFragment;
 
 public class FoodItemFragment extends Fragment {
     TextView textView;
@@ -39,8 +40,11 @@ public class FoodItemFragment extends Fragment {
 
     public void addItem(){
 
-        Intent intent = new Intent(this.getContext(), AddItemFragment.class);
-        startActivity(intent);
+        Fragment fragment = new AddItemFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
 
     }
 

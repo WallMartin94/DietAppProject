@@ -30,16 +30,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import com.example.dietappproject.R;
+import com.example.dietappproject.mealtab.AddMealFragment;
 
-public class AddItemFragment extends AppCompatActivity{
+public class AddItemFragment extends Fragment{
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_additem);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_additem, container, false);
 
-        Button scanButton = findViewById(R.id.scanButton);
+        Button scanButton = v.findViewById(R.id.scanButton);
 
         scanButton.setOnClickListener(view -> {
             launchCamera();
@@ -47,14 +47,18 @@ public class AddItemFragment extends AppCompatActivity{
 
         });
 
-
+return v;
     }
 
     public void launchCamera(){
 
-        Intent startScanIntent = new Intent (this,BarcodeScannerActivity.class);
+
         try{
-            startActivity(startScanIntent);
+            Fragment fragment = new BarcodeFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }catch (ActivityNotFoundException e){
 
         }
