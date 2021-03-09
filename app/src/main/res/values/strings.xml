@@ -8,6 +8,17 @@
 
     <string name="meal_nav_today_label">Today</string>
     <string name="meal_nav_history_label">History</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="prompt_email">Enter Email Address</string>
+    <string name="prompt_password">Enter Password</string>
+    <string name="prompt_password_repeat">Repeat Password</string>
+    <string name="gender">Gender</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="signup">Register</string>
+    <string name="name">Name</string>
 
     <!-- List of Meal Categories for Add Meal -->
     <string-array name="meal_category">
