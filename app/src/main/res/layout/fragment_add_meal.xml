@@ -81,11 +81,25 @@
         app:layout_constraintTop_toBottomOf="@id/spinner_add_meal_category" />
 
 
+    <ImageButton
+        android:id="@+id/button_add_meal_barcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_add_meal_search"
+        app:srcCompat="@drawable/ic_scanner" />
+
     <EditText
         android:id="@+id/edittext_add_meal_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:hint="barcodeId"
         android:inputType="text"
@@ -99,15 +113,12 @@
         android:id="@+id/button_add_meal_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_add_meal_barcode"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/edittext_add_meal_search"
         app:srcCompat="@drawable/ic_search" />
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

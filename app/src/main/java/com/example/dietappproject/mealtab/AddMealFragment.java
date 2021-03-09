@@ -1,5 +1,7 @@
 package com.example.dietappproject.mealtab;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dietappproject.R;
 import com.example.dietappproject.dbobject.FoodItem;
 import com.example.dietappproject.dbobject.Meal;
+import com.example.dietappproject.utils.BarcodeScannerFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -35,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddMealFragment extends Fragment {
+    private static final String TAG = "AddMealFragment";
     View view;
 
     //Firebase Connection
@@ -61,12 +67,15 @@ public class AddMealFragment extends Fragment {
     ImageButton imageButtonSearch;
     ImageButton imageButtonAdd;
     ImageButton imageButtonSave;
+    ImageButton imageButtonBarcode;
     EditText editTextBarCodeId;
     EditText editTextAmount;
     TextView textViewResult;
     ArrayList<FoodItem> searchResult = new ArrayList<>();
     double itemAmount;
 
+    //Camera permission
+    private static final int CAMERA_PERMISSION_CODE = 1;
 
 
     @Nullable
@@ -77,6 +86,7 @@ public class AddMealFragment extends Fragment {
         imageButtonSearch = view.findViewById(R.id.button_add_meal_search);
         imageButtonAdd = view.findViewById(R.id.button_add_listitem);
         imageButtonSave = view.findViewById(R.id.imagebutton_add_meal_save);
+        imageButtonBarcode = view.findViewById(R.id.button_add_meal_barcode);
         editTextBarCodeId = view.findViewById(R.id.edittext_add_meal_search);
         editTextAmount = view.findViewById(R.id.edittext_add_meal_amount);
         textViewResult = view.findViewById(R.id.textview_add_meal_result);
@@ -116,9 +126,16 @@ public class AddMealFragment extends Fragment {
             }
         });
 
+        imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick");
+                openScanner();
+            }
+        });
+
         return view;
     }
-
 
     private void createSpinner(View view) {
         //Spinner Meal Category
@@ -248,5 +265,47 @@ public class AddMealFragment extends Fragment {
         refMeals.add(newMeal);
         Toast.makeText(getActivity(), "Meal added", Toast.LENGTH_SHORT).show();
         getFragmentManager().popBackStackImmediate();
+    }
+
+    private void openScanner() {
+        //If camera permission already granted -> Open Camera
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Fragment fragment = new BarcodeScannerFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, "BarcodeFragment")
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            //If camera permission not granted, request
+            requestCameraPermission();
+        }
+    }
+
+    //Request camera permission
+    private void requestCameraPermission() {
+        Log.i(TAG, "request");
+        requestPermissions(new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+    }
+
+    //Response to camera permission decision
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i(TAG, "RequestCode: " + requestCode + "--CAMERA_PERM_C: " + CAMERA_PERMISSION_CODE);
+        if (requestCode == CAMERA_PERMISSION_CODE)  {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "permission if");
+                Toast.makeText(getActivity(), "Camera permission granted", Toast.LENGTH_SHORT).show();
+                openScanner();
+            } else {
+                Log.i(TAG, "permission else");
+                Toast.makeText(getActivity(), "Camera permission required for barcode scanner", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //Input from camera interface, through MainActivity
+    public void inputFromCamera (String input) {
+        editTextBarCodeId.setText(input);
+        searchFoodItem(input);
     }
 }

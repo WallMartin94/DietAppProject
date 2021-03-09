@@ -40,7 +40,7 @@ public class MealTodayFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = new AddMealFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
+                        .replace(R.id.fragment_container, fragment, "AddMealFragment")
                         .addToBackStack(null)
                         .commit();
             }
