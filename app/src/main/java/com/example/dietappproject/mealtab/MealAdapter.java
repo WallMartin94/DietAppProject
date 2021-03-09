@@ -75,9 +75,15 @@ public class MealAdapter extends FirestoreRecyclerAdapter<Meal, MealAdapter.Meal
     private int mealTypeImageSelector(String type) {
         switch (type) {
             case "Breakfast":
-                return R.drawable.ic_meal;
+                return R.drawable.ic_breakfast;
             case "Snack":
                 return R.drawable.ic_snack;
+            case "Fika":
+                return R.drawable.ic_fika;
+            case "Lunch":
+                return R.drawable.ic_lunch;
+            case "Dinner":
+                return R.drawable.ic_meal;
             default:
                 return R.drawable.ic_meal;
         }
