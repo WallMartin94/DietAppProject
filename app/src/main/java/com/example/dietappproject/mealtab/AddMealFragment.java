@@ -29,6 +29,7 @@ import com.example.dietappproject.dbobject.Meal;
 import com.example.dietappproject.utils.BarcodeScannerFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -47,11 +48,12 @@ public class AddMealFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference refFoodItems = db.collection("FoodItems");
     private CollectionReference refMeals = db.collection("Meals");
+    private FirebaseAuth auth;
 
     //Firebase New Meal variables
     TextView textViewMealTime;
     TextView textViewMealDate;
-    private String mealUser = "3JGnerHpZR8eheF7P58Z";    // TODO Static guest user for now
+    private String mealUser;
     private String mealCategory;
     private Date mealDate;
     private double mealFat = 0, mealCarbs = 0, mealProtein = 0, mealCalories = 0;
@@ -92,6 +94,10 @@ public class AddMealFragment extends Fragment {
         textViewResult = view.findViewById(R.id.textview_add_meal_result);
         textViewMealTime = view.findViewById(R.id.textview_add_meal_show_time);
         textViewMealDate = view.findViewById(R.id.textview_add_meal_show_date);
+
+        //Set UserID from authenticated user
+        auth = FirebaseAuth.getInstance();
+        mealUser = auth.getUid();
 
         setDate(); //TODO should be editable
         createSpinner(view);
