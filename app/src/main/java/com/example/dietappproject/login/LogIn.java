@@ -70,6 +70,13 @@ public class LogIn extends AppCompatActivity {
             }
         });
 
+        //Autologin if previously authenticated
+        if (auth.getCurrentUser() != null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         if (emailStored != null) {
             mEmailView.setText(emailStored);
             mPasswordView.requestFocus();
