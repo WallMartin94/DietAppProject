@@ -24,7 +24,8 @@ public class MealAdapter extends FirestoreRecyclerAdapter<Meal, MealAdapter.Meal
 
     @Override
     protected void onBindViewHolder(@NonNull MealHolder holder, int position, @NonNull Meal model) {
-        holder.textViewMealType.setText(model.getCategory());
+        holder.textViewMealCategory.setText(model.getCategory());
+        holder.textViewMealDate.setText((String.valueOf(model.getDate())).substring(0, 16));
         holder.textViewMealInfo.setText("- Fat: " + String.format("%.0f", model.getFat()) +
                 "\n- Carbs: " + String.format("%.0f", model.getCarbs()) +
                 "\n- Protein: " + String.format("%.0f", model.getProtein()) +
@@ -45,15 +46,17 @@ public class MealAdapter extends FirestoreRecyclerAdapter<Meal, MealAdapter.Meal
 
     class MealHolder extends RecyclerView.ViewHolder {
         ImageView imageViewMealIcon;
-        TextView textViewMealType;
+        TextView textViewMealCategory;
         TextView textViewMealInfo;
+        TextView textViewMealDate;
 
 
         public MealHolder(View itemView) {
             super(itemView);
-            textViewMealType = itemView.findViewById(R.id.textview_meal_type);
-            textViewMealInfo = itemView.findViewById(R.id.textview_meal_info);
-            imageViewMealIcon = itemView.findViewById(R.id.imageview_meal_icon);
+            textViewMealCategory = itemView.findViewById(R.id.textview_mealitem_category);
+            textViewMealInfo = itemView.findViewById(R.id.textview_mealitem_info);
+            textViewMealDate = itemView.findViewById(R.id.textview_mealitem_date);
+            imageViewMealIcon = itemView.findViewById(R.id.imageview_mealitem_icon);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();

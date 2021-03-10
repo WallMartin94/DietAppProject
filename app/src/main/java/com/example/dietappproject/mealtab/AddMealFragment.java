@@ -2,6 +2,7 @@ package com.example.dietappproject.mealtab;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,15 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +29,6 @@ import com.example.dietappproject.R;
 import com.example.dietappproject.dbobject.FoodItem;
 import com.example.dietappproject.dbobject.Meal;
 import com.example.dietappproject.utils.BarcodeScannerFragment;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,6 +37,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,11 +53,12 @@ public class AddMealFragment extends Fragment {
     private FirebaseAuth auth;
 
     //Firebase New Meal variables
-    TextView textViewMealTime;
-    TextView textViewMealDate;
+    TimePicker timePickerMealTime;
+    DatePicker datePickerMealDate;
     private String mealUser;
     private String mealCategory;
-    private Date mealDate;
+    private Date mealDate;          //Store to Firestore
+    private Calendar mealDateCal;   //Temp store for date/time pickers
     private double mealFat = 0, mealCarbs = 0, mealProtein = 0, mealCalories = 0;
     private Map<String, Double> mealItems = new HashMap<>();
 
@@ -92,23 +95,15 @@ public class AddMealFragment extends Fragment {
         editTextBarCodeId = view.findViewById(R.id.edittext_add_meal_search);
         editTextAmount = view.findViewById(R.id.edittext_add_meal_amount);
         textViewResult = view.findViewById(R.id.textview_add_meal_result);
-        textViewMealTime = view.findViewById(R.id.textview_add_meal_show_time);
-        textViewMealDate = view.findViewById(R.id.textview_add_meal_show_date);
+        timePickerMealTime = view.findViewById(R.id.timepicker_add_meal);
+        datePickerMealDate = view.findViewById(R.id.datepicker_add_meal);
 
         //Set UserID from authenticated user
         auth = FirebaseAuth.getInstance();
         mealUser = auth.getUid();
 
-        setDate(); //TODO should be editable
         createSpinner(view);
         setupRecyclerView();
-
-        textViewMealTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: TimePicker
-            }
-        });
 
         imageButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,10 +167,6 @@ public class AddMealFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    private void setDate() {
-        mealDate = new Date();
     }
 
     private void searchFoodItem(String barcodeId) {
@@ -251,6 +242,31 @@ public class AddMealFragment extends Fragment {
             Toast.makeText(getActivity(), "Please select a Category", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        //Store time
+        mealDateCal = Calendar.getInstance();
+        Log.i(TAG, String.valueOf(mealDateCal.getTime()));
+
+        if (Build.VERSION.SDK_INT < 23){
+            mealDateCal.set(datePickerMealDate.getYear(),
+                    datePickerMealDate.getMonth(),
+                    datePickerMealDate.getDayOfMonth(),
+                    timePickerMealTime.getCurrentHour(),
+                    timePickerMealTime.getCurrentMinute(),
+                    00);
+        } else {
+            mealDateCal.set(datePickerMealDate.getYear(),
+                    datePickerMealDate.getMonth(),
+                    datePickerMealDate.getDayOfMonth(),
+                    timePickerMealTime.getHour(),
+                    timePickerMealTime.getMinute(),
+                    00);
+        }
+
+        Log.i(TAG, String.valueOf(mealDateCal.getTime()));
+        mealDate = new Date(mealDateCal.getTimeInMillis());
+
+        Log.i(TAG, String.valueOf(mealDate.getTime()));
 
         //Add foodItem totals to Meal variables
         for (AddMealItem item : addMealItemList) {

@@ -1,6 +1,7 @@
 package com.example.dietappproject.mealtab;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class MealTodayFragment extends Fragment {
@@ -51,15 +53,23 @@ public class MealTodayFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
-        //Query for today's meals
-        Date todayEarly = new Date();
-        todayEarly.setHours(0);
-        todayEarly.setMinutes(0);
-        todayEarly.setSeconds(0);
+        //Get time
+        Calendar calCurrent = Calendar.getInstance();
+        Calendar calEarly = Calendar.getInstance();
+        Calendar calLate = Calendar.getInstance();
+        calEarly.set(calCurrent.get(Calendar.YEAR),
+                calCurrent.get(Calendar.MONTH),
+                calCurrent.get(Calendar.DAY_OF_MONTH),
+                00, 00, 00);
+        calLate.set(calCurrent.get(Calendar.YEAR),
+                calCurrent.get(Calendar.MONTH),
+                calCurrent.get(Calendar.DAY_OF_MONTH),
+                23, 59, 59);
 
+        //Query for today's meals
         Query query = mealRef
-                .whereLessThan("date", new Date())
-                .whereGreaterThan("date", todayEarly)
+                .whereLessThan("date", calLate.getTime())
+                .whereGreaterThan("date", calEarly.getTime())
                 .orderBy("date", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Meal> options = new FirestoreRecyclerOptions.Builder<Meal>()

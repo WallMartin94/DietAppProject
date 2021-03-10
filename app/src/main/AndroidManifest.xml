@@ -16,7 +16,8 @@
             android:value="barcode" />
 
         <activity android:name=".login.Register" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".login.LogIn"
             android:windowSoftInputMode="adjustPan">
