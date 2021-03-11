@@ -1,6 +1,7 @@
 package com.example.dietappproject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.example.dietappproject.mealtab.MealFragment;
 import com.example.dietappproject.statstab.StatsFragment;
 import com.example.dietappproject.utils.BarcodeScannerFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,6 +30,10 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
     private CollectionReference refUsers = db.collection("Users");
     private CollectionReference refFoodItems = db.collection("FoodItems");
     private CollectionReference refMeals = db.collection("Meals");
+
+    //Firebase User
+    private FirebaseAuth auth;
+
 
 
 
@@ -45,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
         }
+
+        auth = FirebaseAuth.getInstance();
+        Log.i(TAG, auth.toString() + "---" + auth.getUid());
     }
 
     //Navigation - Bottom tabs selection
