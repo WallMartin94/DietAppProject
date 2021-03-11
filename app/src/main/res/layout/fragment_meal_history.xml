@@ -1,14 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".mealtab.MealHistoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <DatePicker
+        android:id="@+id/datepicker_meal_history_from"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:hint="Date of birth"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textview_meal_history_from"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <DatePicker
+        android:id="@+id/datepicker_meal_history_to"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:hint="Date of birth"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textview_meal_history_to"
+        app:layout_constraintTop_toBottomOf="@+id/datepicker_meal_history_from" />
+
     <TextView
+        android:id="@+id/textview_meal_history_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="From Date"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/datepicker_meal_history_from"
+        app:layout_constraintEnd_toStartOf="@+id/datepicker_meal_history_from"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/datepicker_meal_history_from" />
+
+    <TextView
+        android:id="@+id/textview_meal_history_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="To Date"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/datepicker_meal_history_to"
+        app:layout_constraintEnd_toStartOf="@+id/datepicker_meal_history_to"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/datepicker_meal_history_to" />
+
+    <ImageButton
+        android:id="@+id/button_meal_history_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_search"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datepicker_meal_history_to" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HISTORY" />
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_meal_history_search">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_meal_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

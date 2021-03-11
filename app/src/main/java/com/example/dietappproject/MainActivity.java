@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
                     }
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, selectedFragment, selectedFragmentTag)
+                            .addToBackStack(null)
                             .commit();
 
                     return true;

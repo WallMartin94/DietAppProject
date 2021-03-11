@@ -9,77 +9,87 @@
         android:id="@+id/imagebutton_add_meal_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_check" />
+
+    <TextView
+        android:id="@+id/textview_add_meal_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/timepicker_add_meal"
+        app:layout_constraintEnd_toStartOf="@+id/timepicker_add_meal"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datepicker_add_meal" />
 
     <TextView
         android:id="@+id/textview_add_meal_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:text="Category"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_add_meal_category"
         app:layout_constraintEnd_toStartOf="@+id/spinner_add_meal_category"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spinner_add_meal_category" />
 
-
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner_add_meal_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textview_add_meal_category"
+        app:layout_constraintTop_toBottomOf="@+id/timepicker_add_meal" />
+
+    <DatePicker
+        android:id="@+id/datepicker_add_meal"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        android:hint="Date of birth"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textview_add_meal_date"
         app:layout_constraintTop_toBottomOf="@+id/imagebutton_add_meal_save" />
 
     <TextView
-        android:id="@+id/textview_add_meal_time"
+        android:id="@+id/textview_add_meal_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="Time"
+        android:layout_marginStart="8dp"
+        android:text="Date"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/timepicker_add_meal"
+        app:layout_constraintEnd_toStartOf="@+id/datepicker_add_meal"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_add_meal_category" />
+        app:layout_constraintTop_toTopOf="@+id/datepicker_add_meal" />
 
-    <TextView
-        android:id="@+id/textview_add_meal_show_time"
+    <TimePicker
+        android:id="@+id/timepicker_add_meal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="00:00"
+        android:layout_height="100dp"
+        android:layout_weight="50"
+        android:timePickerMode="spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textview_add_meal_show_date"
-        app:layout_constraintTop_toBottomOf="@id/spinner_add_meal_category" />
-
-    <TextView
-        android:id="@+id/textview_add_meal_show_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="2021-01-01"
-        app:layout_constraintEnd_toStartOf="@+id/textview_add_meal_show_time"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/textview_add_meal_time"
-        app:layout_constraintTop_toBottomOf="@id/spinner_add_meal_category" />
-
+        app:layout_constraintTop_toBottomOf="@+id/datepicker_add_meal" />
 
     <ImageButton
         android:id="@+id/button_add_meal_barcode"
@@ -119,6 +129,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/edittext_add_meal_search"
         app:srcCompat="@drawable/ic_search" />
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -162,7 +173,6 @@
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textview_add_meal_result"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_delete_listitem"
                 app:layout_constraintStart_toStartOf="@+id/guideline_card"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -190,7 +200,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_add_meal"
@@ -202,6 +212,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline_middle"
         app:layout_constraintVertical_bias="0.0" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
