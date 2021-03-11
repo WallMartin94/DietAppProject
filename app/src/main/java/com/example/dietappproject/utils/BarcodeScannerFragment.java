@@ -30,7 +30,9 @@ public class BarcodeScannerFragment extends Fragment {
     public interface CameraListener {
         void onInputCameraSent(String input);
     }
+
     private CameraListener listener;
+
 
     @Nullable
     @Override

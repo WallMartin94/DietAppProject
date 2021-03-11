@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.dietappproject.fooditemtab.AddItemFragment;
 import com.example.dietappproject.fooditemtab.FoodItemFragment;
 import com.example.dietappproject.hometab.HomeFragment;
 import com.example.dietappproject.mealtab.AddMealFragment;
@@ -83,7 +84,13 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
     //Scanned input from Camera back to AddMeal
     @Override
     public void onInputCameraSent(String input) {
+
         Fragment frag = getSupportFragmentManager().findFragmentByTag("AddMealFragment");
         ((AddMealFragment) frag).inputFromCamera(input);
     }
+
+
+
+
+
 }

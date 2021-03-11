@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -21,11 +21,11 @@ import androidx.fragment.app.Fragment;
 import com.budiyev.android.codescanner.AutoFocusMode;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
-import com.budiyev.android.codescanner.DecodeCallback;
-import com.budiyev.android.codescanner.ErrorCallback;
+
 import com.budiyev.android.codescanner.ScanMode;
 import com.example.dietappproject.R;
-import com.google.zxing.Result;
+
+
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,12 +34,21 @@ import java.util.ArrayList;
 
 import kotlin.jvm.internal.Intrinsics;
 
-public class BarcodeFragment extends Fragment{
+public class BarcodeFragment extends Fragment   {
     private CodeScanner mCodeScanner;
     private TextView code_text_view;
     private final int CAMERA_REQUEST_CODE = 101;
-    private ArrayList<Boolean> permissionList;
     private ArrayList<String> cameraList;
+    private CameraListenerAdd addListener;
+
+
+    public interface CameraListenerAdd{
+        void onInputCameraSentItem(String input);
+
+    }
+
+
+
 
     @Nullable
     @Override
@@ -56,10 +65,11 @@ public class BarcodeFragment extends Fragment{
 
 
         mCodeScanner.setDecodeCallback(result -> activity.runOnUiThread(()
-                -> code_text_view.setText(result.getText())));
+                -> addListener.onInputCameraSentItem(result.getText())));
+                    getFragmentManager().popBackStackImmediate();
 
         mCodeScanner.setErrorCallback(error -> activity.runOnUiThread(()
-                -> Log.e("Main", "Camera failed to initalize:",error)));
+                -> Log.e("Main", "Camera failed to initalize:", error)));
 
         scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
         return root;
@@ -92,9 +102,6 @@ public class BarcodeFragment extends Fragment{
         this.mCodeScanner.setFlashEnabled(false);
 
 
-
-
-
     }
 
     private void setUpPermissions() {
@@ -115,24 +122,24 @@ public class BarcodeFragment extends Fragment{
         ActivityCompat.requestPermissions(this.getActivity(), new String[]{cameraList.get(0)}, CAMERA_REQUEST_CODE);
 
 
-
-
-
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         Intrinsics.checkNotNullParameter(permissions, "permissions");
         Intrinsics.checkNotNullParameter(grantResults, "grantResults");
-        switch(requestCode) {
+        switch (requestCode) {
             case CAMERA_REQUEST_CODE:
-                if (grantResults.length == 0 || grantResults[0]!=PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this.getActivity(), "You need to allow camera to scan codes", Toast.LENGTH_SHORT).show();
                 }
-            default: //When scan is successful
+            default:
+
+
+
 
         }
     }
-
 
 
 }
