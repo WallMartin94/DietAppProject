@@ -13,6 +13,7 @@ import com.example.dietappproject.fooditemtab.FoodItemFragment;
 import com.example.dietappproject.hometab.HomeFragment;
 import com.example.dietappproject.mealtab.AddMealFragment;
 import com.example.dietappproject.mealtab.MealFragment;
+import com.example.dietappproject.settingstab.SettingsFragment;
 import com.example.dietappproject.statstab.StatsFragment;
 import com.example.dietappproject.utils.BarcodeScannerFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -81,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
                             selectedFragment = new StatsFragment();
                             selectedFragmentTag = "StatsFragment";
                             break;
+                        case R.id.nav_settings:
+                            selectedFragment = new SettingsFragment();
+                            selectedFragmentTag = "SettingsFragment";
+                            break;
                     }
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, selectedFragment, selectedFragmentTag)
@@ -98,9 +103,4 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
         Fragment frag = getSupportFragmentManager().findFragmentByTag("AddMealFragment");
         ((AddMealFragment) frag).inputFromCamera(input);
     }
-
-
-
-
-
 }

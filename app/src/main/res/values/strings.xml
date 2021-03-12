@@ -5,6 +5,7 @@
     <string name="bottom_nav_meal_label">Today\'s Meals</string>
     <string name="bottom_nav_fooditem_label">Food Items</string>
     <string name="bottom_nav_stats_label">Statistics</string>
+    <string name="bottom_nav_settings_label">Settings</string>
 
     <string name="meal_nav_today_label">Today</string>
     <string name="meal_nav_history_label">History</string>
