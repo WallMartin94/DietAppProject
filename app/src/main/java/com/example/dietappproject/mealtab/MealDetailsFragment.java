@@ -1,5 +1,6 @@
 package com.example.dietappproject.mealtab;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +27,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -78,9 +81,18 @@ public class MealDetailsFragment extends Fragment {
         textViewTotalCarbs = view.findViewById(R.id.textview_total_carbs);
         textViewTotalProtein = view.findViewById(R.id.textview_total_protein);
         textViewTotalCalories = view.findViewById(R.id.textview_total_calories);
+        FloatingActionButton fabDelete = view.findViewById(R.id.button_meal_details_delete);
 
         //Get mealId from MealFragment
         mealId = getArguments().getString("mealId");
+
+        //Delete button
+        fabDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteMeal();
+            }
+        });
 
         //RecyclerView - List of foodItems
         mRecyclerView = view.findViewById(R.id.recycler_view_meal_details);
@@ -202,5 +214,30 @@ public class MealDetailsFragment extends Fragment {
         //Piechart animation
         pieChart.animateXY(2000, 2000);
         pieChart.animate();
+    }
+
+    private void deleteMeal() {
+        //Prompt user with Yes/no before deletion
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //On Yes, delete meal and pop fragment
+                        mealRef.document(mealId).delete();
+                        getActivity().getSupportFragmentManager().popBackStackImmediate();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //On No, do nothing
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setMessage("Are you sure you want to delete this meal?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener)
+                .show();
     }
 }
