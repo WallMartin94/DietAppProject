@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import com.example.dietappproject.R;
 import com.example.dietappproject.dbobject.Meal;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +34,10 @@ public class MealHistoryFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mealRef = db.collection("Meals");
     private MealAdapter adapter;
+
+    //Firebase auth
+    private FirebaseAuth auth;
+    private String mealUser;
 
     //Search
     DatePicker datePickerFrom;
@@ -50,6 +55,10 @@ public class MealHistoryFragment extends Fragment {
         imageButtonSearch = view.findViewById(R.id.button_meal_history_search);
         datePickerFrom = view.findViewById(R.id.datepicker_meal_history_from);
         datePickerTo = view.findViewById(R.id.datepicker_meal_history_to);
+
+        //Firebase auth
+        auth = FirebaseAuth.getInstance();
+        mealUser = auth.getUid();
 
         getPickerDates();
         setUpRecyclerView();
@@ -98,6 +107,7 @@ public class MealHistoryFragment extends Fragment {
         Query query = mealRef
                 .whereLessThan("date", queryCalTo.getTime())
                 .whereGreaterThan("date", queryCalFrom.getTime())
+                .whereEqualTo("mealUser", mealUser)
                 .limit(100)
                 .orderBy("date", Query.Direction.DESCENDING);
 
@@ -113,6 +123,7 @@ public class MealHistoryFragment extends Fragment {
         Query query = mealRef
                 .whereLessThan("date", queryCalTo.getTime())
                 .whereGreaterThan("date", queryCalFrom.getTime())
+                .whereEqualTo("mealUser", mealUser)
                 .limit(10)
                 .orderBy("date", Query.Direction.DESCENDING);
 

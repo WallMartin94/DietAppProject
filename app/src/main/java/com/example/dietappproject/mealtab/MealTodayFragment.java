@@ -120,6 +120,7 @@ public class MealTodayFragment extends Fragment {
         query = mealRef
                 .whereLessThan("date", calLate.getTime())
                 .whereGreaterThan("date", calEarly.getTime())
+                .whereEqualTo("mealUser", mealUser)
                 .orderBy("date", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Meal> options = new FirestoreRecyclerOptions.Builder<Meal>()
@@ -173,7 +174,6 @@ public class MealTodayFragment extends Fragment {
                 totalProtein = 0;
                 //Accumulate meal stats
                 for(Meal meal : meals) {
-                    Log.i(TAG, "for: " + meal.getCategory() + meal.getCalories());
                     totalCalories += meal.getCalories();
                     totalFat += meal.getFat();
                     totalCarbs += meal.getCarbs();
