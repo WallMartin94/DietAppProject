@@ -27,7 +27,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-//Firestore
 
 public class MainActivity extends AppCompatActivity implements BarcodeScannerFragment.CameraListener {
     private static final String TAG = "MainActivity";
@@ -40,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
 
     //Firebase User
     private FirebaseAuth auth;
-
-
 
 
     @Override
@@ -59,18 +56,32 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
                     new HomeFragment()).commit();
         }
 
-        auth = FirebaseAuth.getInstance();
-        Log.i(TAG, auth.toString() + "---" + auth.getUid());
+        //When opened from Navigation, go directly to fragment
+        String notificationExtra = null;
+        try {
+            notificationExtra = getIntent().getStringExtra("notificationFragment");
+        } catch (NullPointerException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        if (notificationExtra != null && savedInstanceState == null) {
+            if (notificationExtra.equals("AddMealFragment")) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new AddMealFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        }
     }
-//Method to allow soft keyboard to remove should user touch outside input areas.
+
+    //Method to allow soft keyboard to remove should user touch outside input areas.
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -127,6 +138,4 @@ public class MainActivity extends AppCompatActivity implements BarcodeScannerFra
         Fragment frag = getSupportFragmentManager().findFragmentByTag("AddMealFragment");
         ((AddMealFragment) frag).inputFromCamera(input);
     }
-
-
 }
