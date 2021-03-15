@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mealtab.MealHistoryFragment">
+    tools:context=".mealtab.MealHistoryFragment"
+    android:focusableInTouchMode="true">
 
     <DatePicker
         android:id="@+id/datepicker_meal_history_from"

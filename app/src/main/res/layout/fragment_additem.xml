@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true">
 
     <Button
         android:id="@+id/scanButton"
@@ -24,7 +25,6 @@
         android:layout_height="wrap_content"
         android:hint="Enter barcode or scan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputInfoText" />
 
@@ -100,15 +100,13 @@
         android:id="@+id/inputInfoText"
         android:layout_width="400dp"
         android:layout_height="63dp"
-        android:layout_marginBottom="548dp"
         android:ems="10"
         android:gravity="center_horizontal"
         android:inputType="textPersonName"
         android:text="All values should be per 100g for correct calcualtions"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/barcodeTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scanButton" />
 

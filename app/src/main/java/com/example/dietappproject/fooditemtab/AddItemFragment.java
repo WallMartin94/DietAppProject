@@ -2,6 +2,7 @@ package com.example.dietappproject.fooditemtab;
 
 import android.content.ActivityNotFoundException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,13 +63,7 @@ public class AddItemFragment extends Fragment implements BarcodeFragment.CameraL
 
             try {
 
-                barCodeTextView.setText(null);
-                nameTextView.setText(null);
-                proteinTextView.setText(null);
-                fatTextView.setText(null);
-                carbTextView.setText(null);
-                calTextView.setText(null);
-                typeTextView.setText(null);
+
 
                 String tempCal = calTextView.getText().toString();
                 String tempProtein = proteinTextView.getText().toString();
@@ -76,25 +71,28 @@ public class AddItemFragment extends Fragment implements BarcodeFragment.CameraL
                 String tempFat = fatTextView.getText().toString();
                 String tempBarcode = barCodeTextView.getText().toString();
 
-                int cal = Integer.parseInt(tempCal);
-                int protein = Integer.parseInt(tempProtein);
-                int carb = Integer.parseInt(tempCarb);
-                int fat = Integer.parseInt(tempFat);
-                int barcode = Integer.parseInt(tempBarcode);
+                double cal = Double.parseDouble(tempCal);
+                double  protein = Double.parseDouble(tempProtein);
+                double  carb = Double.parseDouble(tempCarb);
+                double  fat = Double.parseDouble(tempFat);
+                double  barcode = Double.parseDouble(tempBarcode);
 
             } catch (NumberFormatException e) {
                 openDialogText();
             }
+            String Cal = calTextView.getText().toString();
+            String Protein = proteinTextView.getText().toString();
+            String Carb = carbTextView.getText().toString();
+            String Fat = fatTextView.getText().toString();
+            String Barcode = barCodeTextView.getText().toString();
+            String Name = nameTextView.getText().toString();
+            String Type = typeTextView.getText().toString();
             //Checking the input in the text field so that they are not empty
-            if (barCodeTextView != null || barCodeTextView.getText().length() == 8 || nameTextView != null || proteinTextView != null || fatTextView != null || carbTextView != null || calTextView != null || typeTextView != null) {
+            if (!Barcode.equals("") && !Name.equals("") && !Protein.equals("") && !Fat.equals("") && !Carb.equals("") && !Cal.equals("")&& !Type.equals("")) {
 
-                String Cal = calTextView.getText().toString();
-                String Protein = proteinTextView.getText().toString();
-                String Carb = carbTextView.getText().toString();
-                String Fat = fatTextView.getText().toString();
-                String Barcode = barCodeTextView.getText().toString();
-                String Name = nameTextView.getText().toString();
-                String Type = typeTextView.getText().toString();
+
+
+
 
                 Map<String, String> foodItemMap = new HashMap<>();
 
@@ -106,22 +104,29 @@ public class AddItemFragment extends Fragment implements BarcodeFragment.CameraL
                 foodItemMap.put("Calories", Cal);
                 foodItemMap.put("Type", Type);
 
-                refFoodItems.add(foodItemMap).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        openDialogDatabaseError();
-                        String error = e.getMessage();
-                        Toast.makeText(getContext(), "Error:" + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                refFoodItems.add(foodItemMap)
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                openDialogDatabaseError();
+                                String error = e.getMessage();
+                                Toast.makeText(getContext(), "Error:" + error, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
 
-                refFoodItems.add(foodItemMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-
-                        openDialogSuccess();
-                    }
-                });
+                                openDialogSuccess();
+                                barCodeTextView.setText("");
+                                nameTextView.setText("");
+                                proteinTextView.setText("");
+                                fatTextView.setText("");
+                                carbTextView.setText("");
+                                calTextView.setText("");
+                                typeTextView.setText("");
+                            }
+                        });
 
 
             } else {
