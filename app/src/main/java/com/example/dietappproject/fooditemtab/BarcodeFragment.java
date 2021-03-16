@@ -66,9 +66,7 @@ public class BarcodeFragment extends Fragment   {
         codeScanner();
 
 
-        //mCodeScanner.setDecodeCallback(result -> activity.runOnUiThread(()
-          //      -> addListener.onInputCameraSentItem(result.getText())));
-            //        getFragmentManager().popBackStackImmediate();
+
 
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
