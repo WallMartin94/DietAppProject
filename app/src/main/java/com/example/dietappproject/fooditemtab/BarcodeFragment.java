@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,9 +23,10 @@ import com.budiyev.android.codescanner.AutoFocusMode;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 
+import com.budiyev.android.codescanner.DecodeCallback;
 import com.budiyev.android.codescanner.ScanMode;
 import com.example.dietappproject.R;
-
+import com.google.zxing.Result;
 
 
 import org.jetbrains.annotations.NotNull;
@@ -64,14 +66,29 @@ public class BarcodeFragment extends Fragment   {
         codeScanner();
 
 
-        mCodeScanner.setDecodeCallback(result -> activity.runOnUiThread(()
-                -> addListener.onInputCameraSentItem(result.getText())));
-                    getFragmentManager().popBackStackImmediate();
+        //mCodeScanner.setDecodeCallback(result -> activity.runOnUiThread(()
+          //      -> addListener.onInputCameraSentItem(result.getText())));
+            //        getFragmentManager().popBackStackImmediate();
+
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Toast.makeText(activity, "Scanned barcode: " + result.getText(), Toast.LENGTH_SHORT).show();
+
+                        getFragmentManager().popBackStackImmediate();
+                    }
+                });
 
         mCodeScanner.setErrorCallback(error -> activity.runOnUiThread(()
                 -> Log.e("Main", "Camera failed to initalize:", error)));
 
         scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
+
+    }});
         return root;
     }
 
