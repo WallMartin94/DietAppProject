@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -23,14 +25,24 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.dietappproject.R;
+import com.example.dietappproject.dbobject.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 
 public class SettingsFragment extends Fragment {
     private static final String TAG = "FoodItemFragment";
+
+    private FirebaseFirestore db;
+    private String userId;
 
     //Notification Setup
     private NotificationManager mNotificationManager;
@@ -61,6 +73,14 @@ public class SettingsFragment extends Fragment {
     private static final String NOTIFICATION_DI_H = "notification_di_h";
     private static final String NOTIFICATION_DI_M = "notification_di_m";
 
+    private EditText weight;
+    private EditText height;
+    private EditText calorieGoal;
+    private EditText fatGoal;
+    private EditText proteinGoal;
+    private EditText carbGoal;
+
+
     Context context;
     SwitchCompat switchBreakfast;
     SwitchCompat switchLunch;
@@ -82,6 +102,40 @@ public class SettingsFragment extends Fragment {
         timePickerLunch = v.findViewById(R.id.timepicker_settings_lunch);
         timePickerDinner = v.findViewById(R.id.timepicker_settings_dinner);
 
+        weight = v.findViewById(R.id.editTextTextWeight);
+        height = v.findViewById(R.id.editTextTextPersonHeight);
+        calorieGoal = v.findViewById(R.id.editTextTextPersonCalorieGoal);
+        carbGoal = v.findViewById(R.id.editTextCarbsGoal);
+        proteinGoal = v.findViewById(R.id.editTextProteingGoal);
+        fatGoal = v.findViewById(R.id.editTextFatGoal);
+
+        db = FirebaseFirestore.getInstance();
+        userId = FirebaseAuth.getInstance().getUid();
+        db.collection("Users").document(userId)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                user.setDocumentId(documentSnapshot.getId());
+                calorieGoal.setText(String.valueOf(user.getCalorieGoal()));
+                weight.setText(String.valueOf(user.getWeight()));
+                height.setText(String.valueOf(user.getHeight()));
+                carbGoal.setText(String.valueOf(user.getCarbsGoal()));
+                fatGoal.setText(String.valueOf(user.getFatGoal()));
+                proteinGoal.setText(String.valueOf(user.getProteinGoal()));
+            }});
+
+
+        db = FirebaseFirestore.getInstance();
+
+        Button btn = v.findViewById(R.id.ButtonSettingsSave);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSettings();
+            }
+        });
+
         //Shared preferences
         sharedPref = getActivity().getSharedPreferences("settings", context.MODE_PRIVATE);
         sharedPrefEditor = sharedPref.edit();
@@ -94,6 +148,17 @@ public class SettingsFragment extends Fragment {
         createNotificationChannel();
 
         return v;
+    }
+
+    private void saveSettings(){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("height", Double.parseDouble(height.getText().toString()));
+        map.put("weight", Double.parseDouble(weight.getText().toString()));
+        map.put("calorieGoal", Double.parseDouble(calorieGoal.getText().toString()));
+        map.put("fatGoal", Double.parseDouble(fatGoal.getText().toString()));
+        map.put("carbsGoal", Double.parseDouble(carbGoal.getText().toString()));
+        map.put("proteinGoal", Double.parseDouble(proteinGoal.getText().toString()));
+        db.collection("Users").document(userId).update(map);
     }
 
     public void setupNotifications() {
@@ -327,4 +392,5 @@ public class SettingsFragment extends Fragment {
             timePickerDinner.setMinute(dinnerMinute);
         }
     }
+
 }

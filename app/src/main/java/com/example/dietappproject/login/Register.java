@@ -132,7 +132,7 @@ public class Register extends AppCompatActivity {
             data.put("name",nameText);
             data.put("email", emailText);
             data.put("password",passwordText);
-            data.put("date_of_birth",dobText);
+            data.put("dateOfBirth",dobText);
             data.put("gender",genderText);
             // yyyy-mm-dd - date format
     }

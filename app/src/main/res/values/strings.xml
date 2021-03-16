@@ -27,6 +27,14 @@
     <string name="settings_breakfast_label">Breakfast</string>
     <string name="settings_lunch_label">Lunch</string>
     <string name="settings_dinner_label">Dinner</string>
+    <string name="save">Save</string>
+    <string name="calorie_goal">Calorie Goal</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="protein_goal">Protein Goal</string>
+    <string name="carbs_goal">Carbs Goal</string>
+    <string name="fat_goal">Fat Goal</string>
+
 
     <!-- List of Meal Categories for Add Meal -->
     <string-array name="meal_category">
