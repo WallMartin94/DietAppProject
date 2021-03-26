@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome @string"
-        android:textColor="#0B0606"
+        android:textColor="#ffffff"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
